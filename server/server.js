@@ -64,7 +64,7 @@ app.post('/deploy', verifyFirebaseToken, async (req, res) => {
   let envVars = { SESSION_ID: sessionId, PREFIX: prefix, ...extraVars };
 
   try {
-    // Sample Heroku API call (adjust as needed)
+    // Sample Heroku API call to create a new app (adjust if needed)
     const response = await fetch(`https://api.heroku.com/apps`, {
       method: "POST",
       headers: {
@@ -104,19 +104,38 @@ app.get('/deploy/my-bots', verifyFirebaseToken, async (req, res) => {
   }
 });
 
-// Route: Get Logs for a Specific Bot
+// Route: Get Logs for a Specific Bot using Log Sessions
 app.get('/logs', verifyFirebaseToken, async (req, res) => {
   const botName = req.query.bot;
   if (!botName) return res.status(400).json({ error: "Bot name required" });
 
+  const herokuApiKey = "HRKU-243b6c53-b708-440c-9ecf-8a433853511d";
+  
   try {
-    const response = await fetch(`https://api.heroku.com/apps/${botName}/logs`, {
+    // Create a log session to get a logplex URL
+    const logSessionResponse = await fetch(`https://api.heroku.com/apps/${botName}/log-sessions`, {
+      method: "POST",
       headers: {
-        "Authorization": `Bearer HRKU-243b6c53-b708-440c-9ecf-8a433853511d`,
-        "Accept": "application/vnd.heroku+json; version=3"
-      }
+        "Authorization": `Bearer ${herokuApiKey}`,
+        "Accept": "application/vnd.heroku+json; version=3",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        dyno: "",         // You can specify a particular dyno if needed
+        lines: 100,       // Number of log lines to retrieve
+        source: "app",    // Log source (can be "app", "heroku", etc.)
+        tail: false       // Set to true for continuous streaming (requires a different approach)
+      })
     });
-    const logs = await response.text();
+    const logSessionData = await logSessionResponse.json();
+    
+    if (!logSessionData.logplex_url) {
+      return res.status(500).json({ error: "Failed to create log session" });
+    }
+    
+    // Retrieve the logs from the logplex URL
+    const logsResponse = await fetch(logSessionData.logplex_url);
+    const logs = await logsResponse.text();
     res.json({ logs });
   } catch (error) {
     console.error("Logs error:", error);
