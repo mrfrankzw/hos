@@ -121,7 +121,7 @@ app.get('/logs', verifyFirebaseToken, async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        dyno: "",         // You can specify a particular dyno if needed
+        dyno: "",         // Optionally specify a dyno
         lines: 100,       // Number of log lines to retrieve
         source: "app",    // Log source (can be "app", "heroku", etc.)
         tail: false       // Set to true for continuous streaming (requires a different approach)
