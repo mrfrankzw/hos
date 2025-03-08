@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SUBZERO-MD Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon -->
+  <link rel="icon" href="https://img.icons8.com/fluency/48/rocket.png" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #003D4D, #005F73);
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 20px;
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-icon {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #1e90ff;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
+    }
+
+    p {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      font-size: 1.2rem;
+      animation: fadeIn 1.4s ease forwards;
+      opacity: 0;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    a.btn {
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: background 0.4s, transform 0.4s;
+    }
+
+    a.btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .features, .about, .contact {
+      padding: 60px 20px;
+      background: rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+      animation: fadeIn 1.6s ease forwards;
+      opacity: 0;
+    }
+
+    .features h2, .about h2, .contact h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .features p, .about p, .contact p {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    footer {
+      padding: 20px 0;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #1e90ff;
+      text-decoration: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-icon {
+        display: block;
+      }
+
+      nav {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      nav.active {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>SUBZERO-MD</div>
+    <div class="menu-icon" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </div>
+    <nav id="navMenu">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>Welcome to SUBZERO-MD</h1>
+    <p>
+      The ultimate WhatsApp Bot solution for seamless deployment, management, and real-time logs.
+    </p>
+    <div class="btn-container">
+      <a href="signup.html" class="btn">Sign Up</a>
+      <a href="login.html" class="btn">Log In</a>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <h2>Features</h2>
+    <p>
+      SUBZERO-MD offers a wide range of features including real-time logs, easy deployment, and seamless management.
+    </p>
+  </section>
+
+  <section class="about" id="about">
+    <h2>About</h2>
+    <p>
+      SUBZERO-MD is developed by Mr Frank to provide a powerful and efficient WhatsApp Bot solution for users worldwide.
+    </p>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2>Contact</h2>
+    <p>
+      Have questions? Reach out to us at <a href="mailto:support@subzeromd.com">support@subzeromd.com</a>.
+    </p>
+  </section>
+
+  <footer>
+    Made by <a href="https://whatsapp.com/channel/0029VagQEmB002T7MWo3Sj1D">Mr Frank</a> &copy; <span id="year"></span>
+  </footer>
+
+  <script>
+    // Update year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Toggle menu for mobile
+    function toggleMenu() {
+      const navMenu = document.getElementById("navMenu");
+      navMenu.classList.toggle("active");
+    }
+
+    // Add animations on scroll
+    const sections = document.querySelectorAll(".hero, .features, .about, .contact");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    sections.forEach((section) => observer.observe(section));
+  </script>
+</body>
+</html>
