@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - SubZero Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #003D4D, #005F73);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      width: 300px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    a {
+      color: #1e90ff;
+      text-decoration: none;
+    }
+    .message {
+      color: red;
+      font-size: 0.9em;
+    }
+  </style>
+  <!-- Firebase App & Auth SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBhVU65ZFbxaNFhWrRqh3WDmnhHPG9BpCM",
+      authDomain: "subzero-9b530.firebaseapp.com",
+      projectId: "subzero-9b530",
+      storageBucket: "subzero-9b530.firebasestorage.app",
+      messagingSenderId: "404683905406",
+      appId: "1:404683905406:web:5eb953df190af3b163fb2f",
+      measurementId: "G-JV9575DN0L"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <div class="container" id="authContainer">
+    <h2 id="authTitle">Login</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button id="authButton">Login</button>
+    <p id="message" class="message"></p>
+    <p id="toggleAuthText">Don't have an account? <a href="#" id="toggleLink">Sign Up</a></p>
+  </div>
+  <script>
+    let isLogin = true;
+    const authTitle = document.getElementById("authTitle");
+    const authButton = document.getElementById("authButton");
+    const toggleLink = document.getElementById("toggleLink");
+    const toggleAuthText = document.getElementById("toggleAuthText");
+    const messageEl = document.getElementById("message");
+
+    toggleLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      isLogin = !isLogin;
+      if (isLogin) {
+        authTitle.innerText = "Login";
+        authButton.innerText = "Login";
+        toggleAuthText.innerHTML = `Don't have an account? <a href="#" id="toggleLink">Sign Up</a>`;
+      } else {
+        authTitle.innerText = "Sign Up";
+        authButton.innerText = "Sign Up";
+        toggleAuthText.innerHTML = `Already have an account? <a href="#" id="toggleLink">Login</a>`;
+      }
+    });
+
+    document.getElementById("authButton").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        if (isLogin) {
+          await firebase.auth().signInWithEmailAndPassword(email, password);
+        } else {
+          await firebase.auth().createUserWithEmailAndPassword(email, password);
+        }
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        messageEl.innerText = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
