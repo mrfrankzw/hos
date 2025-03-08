@@ -1,4 +1,3 @@
-// server/server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -58,7 +57,6 @@ async function verifyFirebaseToken(req, res, next) {
 app.post('/deploy', verifyFirebaseToken, async (req, res) => {
   const { sessionId, prefix, extraVars } = req.body;
   const herokuApiKey = "HRKU-243b6c53-b708-440c-9ecf-8a433853511d";
-  // Use the full GitHub tarball URL (which should now include heroku.yml and DockerFile)
   const repoTarballUrl = "https://github.com/mrfrank-ofc/SUBZERO-BOT/tarball/main";
   
   // Combine default and extra environment variables
