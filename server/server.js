@@ -153,6 +153,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 */
 // server/server.js
+// server/server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -208,18 +209,19 @@ async function verifyFirebaseToken(req, res, next) {
   }
 }
 
-// Route: Deploy Bot
+// Route: Deploy Bot from GitHub and trigger a build
 app.post('/deploy', verifyFirebaseToken, async (req, res) => {
   const { sessionId, prefix, extraVars } = req.body;
   const herokuApiKey = "HRKU-243b6c53-b708-440c-9ecf-8a433853511d";
-  const repoName = "mrfrank-ofc/SUBZERO-BOT";
-
+  // Use the full GitHub repository tarball URL
+  const repoTarballUrl = "https://github.com/mrfrank-ofc/SUBZERO-BOT/tarball/main";
+  
   // Combine default and extra environment variables
   let envVars = { SESSION_ID: sessionId, PREFIX: prefix, ...extraVars };
 
   try {
-    // Sample Heroku API call to create a new app (adjust if needed)
-    const response = await fetch(`https://api.heroku.com/apps`, {
+    // Create a new Heroku app
+    const appResponse = await fetch(`https://api.heroku.com/apps`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${herokuApiKey}`,
@@ -231,17 +233,34 @@ app.post('/deploy', verifyFirebaseToken, async (req, res) => {
         stack: "container"
       })
     });
-    const data = await response.json();
-
+    const appData = await appResponse.json();
+    
+    // Trigger a build from the GitHub repository tarball
+    const buildResponse = await fetch(`https://api.heroku.com/apps/${appData.name}/builds`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${herokuApiKey}`,
+        "Accept": "application/vnd.heroku+json; version=3",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        source_blob: {
+          url: repoTarballUrl,
+          version: "main"
+        }
+      })
+    });
+    const buildData = await buildResponse.json();
+    
     // Save bot info to MongoDB (linked to Firebase uid)
     const newBot = new Bot({
-      name: data.name,
+      name: appData.name,
       owner: req.user.uid,
       envVariables: envVars,
     });
     await newBot.save();
 
-    res.json({ message: "Bot deployed!", bot: data });
+    res.json({ message: "Bot deployed and build triggered!", bot: appData, build: buildData });
   } catch (error) {
     console.error("Deployment error:", error);
     res.status(500).json({ error: "Deployment failed" });
