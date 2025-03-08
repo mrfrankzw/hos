@@ -209,11 +209,11 @@ async function verifyFirebaseToken(req, res, next) {
   }
 }
 
-// Route: Deploy Bot from GitHub and trigger a build
+// Route: Deploy Bot using Docker-based build from GitHub
 app.post('/deploy', verifyFirebaseToken, async (req, res) => {
   const { sessionId, prefix, extraVars } = req.body;
   const herokuApiKey = "HRKU-243b6c53-b708-440c-9ecf-8a433853511d";
-  // Use the full GitHub repository tarball URL
+  // Use the full GitHub tarball URL (which should now include heroku.yml and DockerFile)
   const repoTarballUrl = "https://github.com/mrfrank-ofc/SUBZERO-BOT/tarball/main";
   
   // Combine default and extra environment variables
@@ -235,7 +235,7 @@ app.post('/deploy', verifyFirebaseToken, async (req, res) => {
     });
     const appData = await appResponse.json();
     
-    // Trigger a build from the GitHub repository tarball
+    // Trigger a build using the source blob (which points to the GitHub tarball)
     const buildResponse = await fetch(`https://api.heroku.com/apps/${appData.name}/builds`, {
       method: "POST",
       headers: {
@@ -252,7 +252,7 @@ app.post('/deploy', verifyFirebaseToken, async (req, res) => {
     });
     const buildData = await buildResponse.json();
     
-    // Save bot info to MongoDB (linked to Firebase uid)
+    // Save bot info to MongoDB (linking it to the Firebase user uid)
     const newBot = new Bot({
       name: appData.name,
       owner: req.user.uid,
@@ -297,7 +297,7 @@ app.get('/logs', verifyFirebaseToken, async (req, res) => {
         dyno: "",         // Optionally specify a dyno
         lines: 100,       // Number of log lines to retrieve
         source: "app",    // Log source (can be "app", "heroku", etc.)
-        tail: false       // Set to true for continuous streaming (requires a different approach)
+        tail: false       // For continuous streaming, a different approach is needed
       })
     });
     const logSessionData = await logSessionResponse.json();
@@ -321,6 +321,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// Start the server (Heroku will provide process.env.PORT)
+// Start the server (Heroku provides process.env.PORT)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
