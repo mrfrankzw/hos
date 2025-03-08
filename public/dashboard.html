@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SubZero Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="https://img.icons8.com/fluency/48/rocket.png" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #003D4D, #005F73);
+      color: #fff;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .menu {
+      display: flex;
+      gap: 15px;
+    }
+    .menu button {
+      background: #007bff;
+      border: none;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+    input, button, select {
+      padding: 10px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+  <!-- Firebase App & Auth SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script>
+    // Initialize Firebase (same config as landing page)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBhVU65ZFbxaNFhWrRqh3WDmnhHPG9BpCM",
+      authDomain: "subzero-9b530.firebaseapp.com",
+      projectId: "subzero-9b530",
+      storageBucket: "subzero-9b530.firebasestorage.app",
+      messagingSenderId: "404683905406",
+      appId: "1:404683905406:web:5eb953df190af3b163fb2f",
+      measurementId: "G-JV9575DN0L"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <header>
+    <h1>SubZero Dashboard</h1>
+    <div class="menu">
+      <button onclick="showSection('deploySection')">Deploy Bot</button>
+      <button onclick="showSection('myBotsSection')">My Bots</button>
+      <button onclick="showSection('logsSection')">Live Logs</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+  <div class="content">
+    <!-- Deploy Bot Section -->
+    <div id="deploySection" class="section">
+      <h2>Deploy New Bot</h2>
+      <form id="deployForm">
+        <input type="text" id="sessionId" placeholder="SESSION_ID" required />
+        <input type="text" id="prefix" placeholder="PREFIX" required />
+        <div id="extraVarsContainer"></div>
+        <button type="button" id="addVarButton">+ Add Variable</button>
+        <br />
+        <button type="submit">Deploy Bot</button>
+      </form>
+      <p id="deployMessage"></p>
+    </div>
+    <!-- My Bots Section -->
+    <div id="myBotsSection" class="section" style="display:none;">
+      <h2>My Bots</h2>
+      <div id="botsList"></div>
+    </div>
+    <!-- Live Logs Section -->
+    <div id="logsSection" class="section" style="display:none;">
+      <h2>Live Logs</h2>
+      <select id="botSelect">
+        <option value="">Select a bot</option>
+      </select>
+      <button id="fetchLogsButton">Fetch Logs</button>
+      <pre id="logsOutput">Logs will appear here...</pre>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
